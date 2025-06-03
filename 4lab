@@ -1,0 +1,142 @@
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <string>
+#include <sstream>  
+class Student {
+public:
+    std::string name;
+    int age;
+    std::string grade;
+
+    Student() : name(""), age(0), grade("") {}
+    Student(const std::string& name, int age, const std::string& grade)
+        : name(name), age(age), grade(grade) {}
+
+    std::string toString() const {
+        return name + " " + std::to_string(age) + " " + grade;
+    }
+
+    static Student fromString(const std::string& str) {
+        std::istringstream iss(str);
+        std::string name, grade;
+        int age;
+        iss >> name >> age >> grade;
+        return Student(name, age, grade);
+    }
+};
+
+class Database {
+private:
+    std::vector<Student> students;
+    std::string filename;
+
+public:
+    Database(const std::string& filename) : filename(filename) {
+        load();
+    }
+
+    void addStudent(const Student& student) {
+        students.push_back(student);
+        save();
+    }
+
+    void save() {
+        std::ofstream file(filename);
+        for (const auto& student : students) {
+            file << student.toString() << std::endl;
+        }
+    }
+
+    void load() {
+        std::ifstream file(filename);
+        if (file.is_open()) {
+            std::string line;
+            while (std::getline(file, line)) {
+                students.push_back(Student::fromString(line));
+            }
+        }
+    }
+
+    void updateStudent(size_t index, const Student& student) {
+        if (index < students.size()) {
+            students[index] = student;
+            save();
+        } else {
+            std::cout << "Индекс вне диапазона." << std::endl;
+        }
+    }
+
+    void deleteStudent(size_t index) {
+        if (index < students.size()) {
+            students.erase(students.begin() + index);
+            save();
+        } else {
+            std::cout << "Индекс вне диапазона." << std::endl;
+        }
+    }
+
+    void displayStudents() const {
+        for (size_t i = 0; i < students.size(); ++i) {
+            std::cout << i << ": " << students[i].toString() << std::endl;
+        }
+    }
+};
+
+void menu() {
+    std::cout << "\nМеню:" << std::endl;
+    std::cout << "1. Добавить студента" << std::endl;
+    std::cout << "2. Обновить студента" << std::endl;
+    std::cout << "3. Удалить студента" << std::endl;
+    std::cout << "4. Показать всех студентов" << std::endl;
+    std::cout << "5. Выход" << std::endl;
+}
+
+int main() {
+    Database db("lera.txt");
+    int choice;
+
+    while (true) {
+        menu();
+        std::cout << "Выберите действие: ";
+        std::cin >> choice;
+
+        if (choice == 1) {
+            std::string name, grade;
+            int age;
+            std::cout << "Введите имя студента: ";
+            std::cin >> name;
+            std::cout << "Введите возраст студента: ";
+            std::cin >> age;
+            std::cout << "Введите оценку студента: ";
+            std::cin >> grade;
+            db.addStudent(Student(name, age, grade));
+        } else if (choice == 2) {
+            size_t index;
+            std::string name, grade;
+            int age;
+            std::cout << "Введите индекс студента для обновления: ";
+            std::cin >> index;
+            std::cout << "Введите новое имя студента: ";
+            std::cin >> name;
+            std::cout << "Введите новый возраст студента: ";
+            std::cin >> age;
+            std::cout << "Введите новую оценку студента: ";
+            std::cin >> grade;
+            db.updateStudent(index, Student(name, age, grade));
+        } else if (choice == 3) {
+            size_t index;
+            std::cout << "Введите индекс студента для удаления: ";
+            std::cin >> index;
+            db.deleteStudent(index);
+        } else if (choice == 4) {
+            db.displayStudents();
+        } else if (choice == 5) {
+            break;
+        } else {
+            std::cout << "Неверный выбор. Попробуйте снова." << std::endl;
+        }
+    }
+
+    return 0;
+}
