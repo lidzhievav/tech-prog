@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 
-// Класс Node представляет узел списка
+
 class Node {
 public:
     int intData;
@@ -13,7 +13,7 @@ public:
         : intData(intVal), doubleData(doubleVal), stringData(strVal), next(nullptr) {}
 };
 
-// Класс LinkedList управляет списком узлов
+
 class LinkedList {
 private:
     Node* head;
@@ -21,14 +21,14 @@ private:
 public:
     LinkedList() : head(nullptr) {}
 
-    // Метод для добавления узла в начало списка
+    
     void addToFront(int intVal, double doubleVal, const std::string& strVal) {
         Node* newNode = new Node(intVal, doubleVal, strVal);
         newNode->next = head;
         head = newNode;
     }
 
-    // Метод для добавления узла в конец списка
+    
     void addToEnd(int intVal, double doubleVal, const std::string& strVal) {
         Node* newNode = new Node(intVal, doubleVal, strVal);
         if (!head) {
@@ -42,7 +42,7 @@ public:
         temp->next = newNode;
     }
 
-    // Метод для добавления узла в начало по индексу
+   
     void addToFrontIndex(int index, int intVal, double doubleVal, const std::string& strVal) {
         if (index == 0) {
             addToFront(intVal, doubleVal, strVal);
@@ -59,7 +59,7 @@ public:
         }
     }
 
-    // Метод для добавления узла в конец по индексу
+    
     void addToEndIndex(int index, int intVal, double doubleVal, const std::string& strVal) {
         if (index == 0) {
             addToEnd(intVal, doubleVal, strVal);
@@ -76,7 +76,7 @@ public:
         }
     }
 
-    // Метод для удаления узла по значению
+    
     void remove(int intVal, double doubleVal, const std::string& strVal) {
         if (!head) return;
 
@@ -98,7 +98,7 @@ public:
         }
     }
 
-    // Метод для печати всех узлов списка
+   
     void printAll() const {
         Node* temp = head;
         while (temp) {
@@ -109,7 +109,7 @@ public:
         }
     }
 
-    // Деструктор для очистки памяти
+   
     ~LinkedList() {
         Node* temp;
         while (head) {
